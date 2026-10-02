@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
+import { Build } from "./pages/Build";
 import { Count } from "./pages/Count";
+import { Decide } from "./pages/Decide";
 import { Group } from "./pages/Group";
 import { Home } from "./pages/Home";
 import { Later } from "./pages/Later";
@@ -9,6 +11,7 @@ import { Review } from "./pages/Review";
 import { Settings } from "./pages/Settings";
 import { Setup } from "./pages/Setup";
 import { Traces } from "./pages/Traces";
+import { Validate } from "./pages/Validate";
 
 export function App() {
   return (
@@ -21,9 +24,9 @@ export function App() {
         <Route path="review" element={<Review />} />
         <Route path="group" element={<Group />} />
         <Route path="count" element={<Count />} />
-        <Route path="decide" element={<Later title="Decide what each failure needs" />} />
-        <Route path="build" element={<Later title="Build evaluators" />} />
-        <Route path="validate" element={<Later title="Validate judges" />} />
+        <Route path="decide" element={<Decide />} />
+        <Route path="build" element={<Build />} />
+        <Route path="validate" element={<Validate />} />
         <Route path="run" element={<Later title="Run and measure" />} />
         <Route path="export" element={<Later title="Export and operate" />} />
         <Route path="settings" element={<Settings />} />

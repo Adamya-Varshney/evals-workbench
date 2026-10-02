@@ -20,6 +20,8 @@ def responder(job: str):
 
 
 def respond(job: str, ctx: dict, prompt: str) -> dict:
+    from . import mock_evals  # noqa: F401  (registers more responders)
+
     fn = _RESPONDERS.get(job)
     if fn is None:
         raise RuntimeError(f"No mock responder for job '{job}'")

@@ -323,6 +323,9 @@ def sc_availability(rng, ch, fails, now):
             text = (f"Nothing at {SHORT[prop]} fits that right now, but our sister community {alt_prop} has {unit_line(alt).lower()} — about 10 minutes away. "
                     if alt else f"Nothing at {SHORT[prop]} fits that right now. ")
             text += "I can also put you on our notify list so you hear first when a match opens at " + SHORT[prop] + ". Want either of those?"
+            if md_sms:
+                text = (f"**No exact match at {SHORT[prop]}**, but here are options:\n\n"
+                        + (f"- **{alt_prop}**: {unit_line(alt)}\n" if alt else "") + "- Join our **notify list** for new openings\n\nWhich works for you?")
             c.bot(text)
             c.user(typo(rng, "sure add me to the list", 0.5))
             c.tool("add_to_waitlist", {"property": prop, "bedrooms": beds, **{k: v for k, v in filt.items()}}, {"status": "added", "position": rng.randint(2, 9)})
@@ -547,7 +550,10 @@ def sc_maintenance(rng, ch, fails, now):
     c.tool("lookup_resident", {"name": first, "unit": unit, "property": prop},
            {"resident_id": rid, "name": f"{first} {last}", "unit": unit, "property": prop})
     if "promise_no_followup" in fails:
-        c.bot("I'm sorry about that! Let me check with our maintenance team on their availability and get back to you.")
+        if "markdown_sms" in fails:
+            c.bot("**Sorry about that!** 😕\n\n- I'll check with our **maintenance team**\n- I'll get back to you on timing")
+        else:
+            c.bot("I'm sorry about that! Let me check with our maintenance team on their availability and get back to you.")
         if rng.random() < 0.5:
             c.user(typo(rng, "ok how long will that take", 0.5))
             c.bot("I'll follow up as soon as I hear back from them!")

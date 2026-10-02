@@ -18,7 +18,7 @@ def get_engine():
 
 
 def make_engine(url: str):
-    eng = create_engine(url, connect_args={"check_same_thread": False})
+    eng = create_engine(url, connect_args={"check_same_thread": False, "timeout": 30})
 
     @event.listens_for(eng, "connect")
     def _pragmas(dbapi_conn, _):  # noqa: ANN001

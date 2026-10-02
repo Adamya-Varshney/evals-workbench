@@ -85,7 +85,8 @@ def review_trace(pid: int, tid: int, batch_id: Optional[int] = None, s: Session 
     modes = []
     if p.review_round > 1:
         modes = [{"id": m.id, "name": m.name} for m in s.exec(select(FailureMode).where(
-            FailureMode.project_id == pid, FailureMode.archived == False, FailureMode.parent_id == None)).all()]  # noqa: E711,E712
+            FailureMode.project_id == pid, FailureMode.archived == False, FailureMode.parent_id == None,
+            FailureMode.is_none_bucket == False).order_by(FailureMode.rank, FailureMode.id)).all()]  # noqa: E711,E712
     tags = []
     if review:
         tags = [lab.failure_mode_id for lab in s.exec(select(ReviewLabel).where(ReviewLabel.review_id == review.id)).all()]

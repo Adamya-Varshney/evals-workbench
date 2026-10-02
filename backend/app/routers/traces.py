@@ -10,7 +10,7 @@ from sqlmodel import Session, func, select
 from ..config import SEED_FILE
 from ..db import get_session
 from ..importers.normalize import validate_regexes
-from ..models import Batch, BatchTrace, Event, ImportJob, Review, Trace
+from ..models import Batch, BatchTrace, Event, FailureMode, ImportJob, Review, Trace
 from ..services import imports as imp
 from ..services.sampling import METHODS, build_batch
 from ..services.traceview import facets, matches, trace_view
@@ -153,7 +153,15 @@ def create_batch(pid: int, body: BatchIn, s: Session = Depends(get_session)):
     n = s.exec(select(func.count()).select_from(Trace).where(Trace.project_id == pid)).one()
     if n == 0:
         raise HTTPException(400, "Import traces before building a batch")
+    p = get_project(s, pid)
+    has_taxonomy = s.exec(select(FailureMode).where(FailureMode.project_id == pid, FailureMode.is_none_bucket == False,  # noqa: E712
+                                                    FailureMode.archived == False)).first() is not None  # noqa: E712
     b = build_batch(s, pid, body.size, body.method, body.params, body.name, body.seed)
+    if has_taxonomy:
+        # A new round of review once a taxonomy exists: quick-tag chips may appear (after the note).
+        p.review_round += 1
+        s.add(p)
+        s.commit()
     return batch_summary(s, b)
 
 

@@ -56,7 +56,7 @@ def build_batch(s: Session, project_id: int, size: int = 100, method: str = "ran
         rng.shuffle(hits)
         targeted = [(t, "negative_feedback") for t in hits[: size - n_random_min]]
     elif method == "evaluator_flag":
-        flagged = flagged_trace_ids(s, project_id, params.get("evaluator_ids"))
+        flagged = flagged_trace_ids(s, project_id, params.get("evaluator_ids"), params.get("run_id"))
         hits = [t for t in pool if t.id in flagged]
         rng.shuffle(hits)
         targeted = [(t, "evaluator_flag") for t in hits[: size - n_random_min]]
@@ -84,8 +84,8 @@ def facet_value(t: Trace, facet: str):
     return t.meta.get(facet, "(none)")
 
 
-def flagged_trace_ids(s: Session, project_id: int, evaluator_ids: list[int] | None = None) -> set[int]:
-    runs = s.exec(select(EvalRun.id).where(EvalRun.project_id == project_id, EvalRun.kind == "batch")).all()
+def flagged_trace_ids(s: Session, project_id: int, evaluator_ids: list[int] | None = None, run_id: int | None = None) -> set[int]:
+    runs = [run_id] if run_id else s.exec(select(EvalRun.id).where(EvalRun.project_id == project_id, EvalRun.kind == "batch")).all()
     if not runs:
         return set()
     q = select(EvalResult.trace_id).where(EvalResult.run_id.in_(runs), EvalResult.failure == True)  # noqa: E712
