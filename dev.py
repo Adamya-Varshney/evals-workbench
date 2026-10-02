@@ -54,10 +54,10 @@ def dev() -> int:
         if setup():
             return 1
     procs = [
-        subprocess.Popen([py(), "-m", "uvicorn", "app.main:app", "--reload", "--port", "8000"], cwd=BACKEND),
-        subprocess.Popen([NPM, "run", "dev"], cwd=FRONTEND),
+        subprocess.Popen([py(), "-m", "uvicorn", "app.main:app", "--reload", "--reload-dir", "app", "--host", "127.0.0.1", "--port", "8000"], cwd=BACKEND),
+        subprocess.Popen([NPM, "run", "dev", "--", "--host", "127.0.0.1"], cwd=FRONTEND),
     ]
-    print("\n  Evals Workbench -> http://localhost:5173  (API on :8000)\n  Ctrl+C to stop.\n", flush=True)
+    print("\n  Evals Workbench -> http://127.0.0.1:5173  (API on :8000)\n  Ctrl+C to stop.\n", flush=True)
     try:
         while all(p.poll() is None for p in procs):
             try:

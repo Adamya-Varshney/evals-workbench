@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
+import { Count } from "./pages/Count";
+import { Group } from "./pages/Group";
 import { Home } from "./pages/Home";
 import { Later } from "./pages/Later";
 import { Projects } from "./pages/Projects";
@@ -17,8 +19,8 @@ export function App() {
         <Route path="setup" element={<Setup />} />
         <Route path="traces" element={<Traces />} />
         <Route path="review" element={<Review />} />
-        <Route path="group" element={<Later title="Group failures" />} />
-        <Route path="count" element={<Later title="Count and prioritise" />} />
+        <Route path="group" element={<Group />} />
+        <Route path="count" element={<Count />} />
         <Route path="decide" element={<Later title="Decide what each failure needs" />} />
         <Route path="build" element={<Later title="Build evaluators" />} />
         <Route path="validate" element={<Later title="Validate judges" />} />

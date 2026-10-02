@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import ROOT
 from .db import init_db
-from .routers import projects, review, system, traces
+from .routers import group, projects, review, system, traces
 
 
 @asynccontextmanager
@@ -23,6 +23,7 @@ app.include_router(system.router)
 app.include_router(projects.router)
 app.include_router(traces.router)
 app.include_router(review.router)
+app.include_router(group.router)
 
 # Serve the built frontend when it exists (production-style `python dev.py serve`).
 DIST = ROOT / "frontend" / "dist"

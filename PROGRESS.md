@@ -50,4 +50,32 @@
 4. Watch the progress count, median s/trace and the "New problem types" indicator. Try the **Steps** tab and `R` for raw JSON.
 5. After 30 reviews, "Find similar traces" unlocks in the right panel.
 
-## Next: Phase 3 — Group failures and Count
+## Phase 3 — Group failures and Count ✅
+
+**Group failures** (`frontend/src/pages/Group.tsx`, `backend/app/routers/group.py`, `backend/app/services/taxonomy.py`)
+- Every note in one table, with tabs: All, Unassigned, AI suggestions to confirm, None of the above, Needs re-check.
+- **✦ Propose categories** (locked until 30 reviews): sends the failing notes to the model using the terms "open codes" and "axial codes" and returns 5–6 proposals, each with a definition and example notes. Proposals are editable cards; nothing is created until you accept.
+- **Taxonomy editor**: add, rename, merge, split (as siblings or sub-categories, with affected labels flagged for re-check), delete, one level of sub-category, and a full edit history. Every mode has a definition, "counts as" and "does not count as".
+- **Specificity check**: warnings for vague names (quality, temporal, general, issues…), one-word names and missing definition fields. The colleague test is shown in the panel and the editor.
+- **None of the above** always exists. Notes landing there sit in their own queue with a "+ Create category from this note" action.
+- **✦ Suggest assignments**: every suggestion needs your confirmation. Keyboard: J/K move, Enter accepts, 1–9 change modes, 0 sends to None of the above, X rejects, O opens the trace, E edits the note. Bulk accept within a category unlocks only after 10 one-by-one confirmations. A trace can carry several modes, and each label records its source (human, or AI-suggested and confirmed).
+- **Criteria drift**: changing a definition bumps the version and flags that category's labels for re-check. "✓ Still correct" (Enter) clears the flag.
+
+**Count and prioritise** (`frontend/src/pages/Count.tsx`)
+- Pivot table of failure mode and sub-mode by traces, % of reviewed (n=…) and % of failing (n=…), with both denominators labelled. Pivot by any facet (channel, prompt version, property, feedback…) and filter by batch.
+- Every number opens the traces behind it, and each of those opens the full trace with your note.
+- Bar chart sorted by frequency (single series), plus a line stating what share of failures the top three modes account for.
+- Priority list: drag to reorder (or use ▲▼), severity Low/High/Catastrophic shown with icon and text, and a one-line impact note. No computed score.
+
+**Also fixed**: the dev runner now binds to 127.0.0.1 (on Windows `localhost` added ~200ms per request) and only watches `backend/app` for reloads. A stale `frontend/dist` that hid a stuck reload is gone.
+
+**Tests**: 36 backend tests pass, including the full grouping flow (propose → rename vague → suggest → 10 confirmations → bulk → clear None queue → count → drill → severity/order), definition-change re-check with history, and merge/split/sub-categories/delete. The Playwright review test still passes.
+
+**Try it** (on the demo, after reviewing at least 30 traces with notes)
+1. **Group failures** → **✦ Propose categories**. Rewrite any proposal with a warning (e.g. "Temporal issues" → "Wrong current date") and Accept. Reject the vague ones.
+2. **✦ Suggest assignments**, then confirm with the keyboard: Enter, J, change one with a number key, Enter… After 10, "Accept all suggested here" appears on each mode.
+3. Open the **None of the above** tab and create a category from one of its notes.
+4. Edit a mode's definition and watch its labels move into **Needs re-check**.
+5. **Count and prioritise** → pivot by channel → click a number to see the traces. Set severities, drag to reorder.
+
+## Next: Phase 4 — Decide, fix log and code checks
