@@ -319,7 +319,7 @@ function CodeCheckEditor({ pid, e }: { pid: number; e: EvalDetail }) {
 
       {preview && (
         <div className="space-y-3">
-          <MetricsPanel m={preview.metrics} title={`v${preview.version} vs your labels`} />
+          <MetricsPanel m={preview.metrics} who="check" title={`v${preview.version} vs your labels`} />
           {!preview.can_activate && <Notice tone="warn">Not yet: the check needs at least one correct fail and one correct pass on your reviewed traces.</Notice>}
           <div className="flex gap-4 border-b border-ink-700">
             {[["problems", "Disagreements"], ["correct fail", "Correct fails"], ["correct pass", "Correct passes"], ["all", "All"]].map(([k, l]) => (

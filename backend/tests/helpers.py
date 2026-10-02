@@ -27,3 +27,17 @@ def review_batch(client, pid, n=40, size=100, seed=5):
             body["note"] = "; ".join(NOTE_FOR[f] for f in fails)
         client.put(f"/api/projects/{pid}/reviews/{item['id']}", json=body)
     return b["id"], q
+
+
+def wait_run(client, pid, run_id, suite=False, timeout=60):
+    """Background jobs run after the request returns (as in production); poll until done."""
+    import time
+
+    url = f"/api/projects/{pid}/suite/runs/{run_id}/report" if suite else f"/api/projects/{pid}/runs/{run_id}"
+    end = time.time() + timeout
+    while time.time() < end:
+        r = client.get(url).json()
+        if r["status"] in ("done", "failed"):
+            return r
+        time.sleep(0.1)
+    raise AssertionError("run did not finish")

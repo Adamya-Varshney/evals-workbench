@@ -17,6 +17,7 @@ function useRun(pid: number, rid: number | null) {
     queryKey: ["run", pid, rid],
     queryFn: () => api.get<Run>(`/api/projects/${pid}/runs/${rid}`),
     enabled: !!rid,
+    refetchIntervalInBackground: true,
     refetchInterval: (q) => (q.state.data && ["queued", "running"].includes(q.state.data.status) ? 800 : false),
   });
 }
@@ -197,6 +198,11 @@ function JudgeValidation({ pid, eid }: { pid: number; eid: number }) {
             <div className={`rounded-md border px-3 py-2 text-[13px] ${fin.data.metrics.passed ? "border-pass-500/40 bg-pass-900/60 text-pass-400" : "border-fail-500/40 bg-fail-900/60 text-fail-400"}`}>
               {fin.data.metrics.passed ? "✓ Validated" : "✕ Not validated"} — run #{fin.data.metrics.run_number}: TPR {pct(fin.data.metrics.tpr)} and TNR {pct(fin.data.metrics.tnr)} against a threshold of {pct(fin.data.metrics.threshold)} (target {pct(e.target)}).
             </div>
+            {fin.data.metrics.passed && fin.data.metrics.low_confidence && (
+              <Notice tone="warn">
+                Validated, but on only {fin.data.metrics.n_pos} trace(s) with the failure and {fin.data.metrics.n_neg} without. The intervals are wide; label more traces (100–200 total, 30+ of each class per split) before relying on this judge.
+              </Notice>
+            )}
             {fin.data.metrics.overfit_warning && <Notice tone="warn">Likely overfitting: test results are materially worse than dev (gap {pct(fin.data.metrics.dev_gap)}). Revisit the criteria with fresh dev labels rather than tuning on test.</Notice>}
             {fin.data.metrics.repeat_warning && <Notice tone="warn">The test split has been run several times. Repeated final runs used for tuning make this number optimistic.</Notice>}
             <MetricsPanel m={fin.data.metrics} threshold={e.threshold} title="test" />

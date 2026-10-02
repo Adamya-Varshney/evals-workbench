@@ -1,4 +1,4 @@
-from tests.helpers import TRUTH, review_batch
+from tests.helpers import TRUTH, review_batch, wait_run
 
 MODES = {
     "markdown_sms": "Markdown sent over SMS",
@@ -111,7 +111,7 @@ def test_handoff_judge_validation(demo):
     assert client.put(f"{base}/ground_truth/{fid}/{one['trace_id']}", json={"label": True, "critique": ""}).status_code == 400
 
     run = client.post(f"{base}/evaluators/{ev['id']}/run", json={"split": "dev"}).json()
-    r = client.get(f"{base}/runs/{run['run_id']}").json()
+    r = wait_run(client, pid, run["run_id"])
     assert r["status"] == "done", r["error"]
     m = r["metrics"]
     assert m["tpr"] is not None and m["tnr"] > 0.8 and m["n"] == c["dev"]["pos"] + c["dev"]["neg"]
@@ -119,7 +119,7 @@ def test_handoff_judge_validation(demo):
     assert all(row["outcome"] in ("agree", "missed failure", "false alarm") for row in r["rows"])
     # cached second run: no new LLM calls
     calls_before = client.get("/api/llm_calls").json()["totals"]["calls"]
-    client.post(f"{base}/evaluators/{ev['id']}/run", json={"split": "dev"})
+    wait_run(client, pid, client.post(f"{base}/evaluators/{ev['id']}/run", json={"split": "dev"}).json()["run_id"])
     assert client.get("/api/llm_calls").json()["totals"]["calls"] == calls_before
 
     # few-shot from train only
@@ -130,7 +130,7 @@ def test_handoff_judge_validation(demo):
     assert v3["version"] == 3
 
     fin = client.post(f"{base}/evaluators/{ev['id']}/run", json={"split": "test"}).json()
-    f = client.get(f"{base}/runs/{fin['run_id']}").json()
+    f = wait_run(client, pid, fin["run_id"])
     assert f["status"] == "done" and f["metrics"]["passed"] is True, f["metrics"]
     e = client.get(f"{base}/evaluators/{ev['id']}").json()
     assert e["status"] == "validated" and e["active_version_id"] == v3["id"]

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api, type BatchSummary, type Facet, type TraceView } from "../api";
 import { TraceRenderer } from "../components/TraceRenderer";
 import { Empty, Notice, PageHeader, Spinner, Term, usePid, useProject, useStatus } from "../components/ui";
@@ -437,10 +437,12 @@ function Batches({ pid, total }: { pid: number; total: number }) {
 }
 
 function SyntheticTeaser() {
+  const pid = usePid();
   return (
-    <div className="mt-10 rounded-lg border border-ink-700 bg-ink-900/60 p-4 text-sm text-mist-300">
-      <span className="font-semibold text-mist-100">No real traces yet?</span> The <Term tip="Generates varied user inputs from dimensions you define (feature, scenario, persona). You run them through your real system and import the results.">synthetic input generator</Term> arrives in a later phase of this build.
+    <div className="mt-10 rounded-lg border border-ink-700 bg-ink-900 p-4 text-[13px] text-mist-300">
+      <span className="font-semibold text-mist-100">No real traces yet?</span> Use the{" "}
+      <Term tip="Generates varied user inputs from dimensions you define (feature, scenario, persona). You run them through your real system and import the results.">synthetic input generator</Term>{" "}
+      to create realistic inputs, run them through your system, and import the traces. <Link className="text-accent-400 underline" to={`/p/${pid}/synthetic`}>Open it →</Link>
     </div>
   );
 }
-

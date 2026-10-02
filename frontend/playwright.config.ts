@@ -8,7 +8,8 @@ const py = existsSync(venvPy) ? venvPy : "python";
 
 export default defineConfig({
   testDir: "e2e",
-  timeout: 90_000,
+  timeout: 120_000,
+  expect: { timeout: 15_000 },
   use: { baseURL: "http://127.0.0.1:5174", viewport: { width: 1440, height: 900 } },
   webServer: [
     { command: `"${py}" ../backend/e2e_server.py 8011`, url: "http://127.0.0.1:8011/api/meta", reuseExistingServer: false, timeout: 60_000 },

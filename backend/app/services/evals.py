@@ -156,7 +156,7 @@ def submit(run_id: int, fn: Callable[[Session, EvalRun], None], sync: bool = Fal
             s.add(run)
             s.commit()
 
-    if sync or settings.llm_mode == "mock" and _is_test():
+    if sync:
         work()
     else:
         _pool.submit(work)

@@ -526,9 +526,12 @@ def run_judge_split(pid: int, eid: int, body: RunIn, s: Session = Depends(get_se
     s.refresh(run)
     started = now()
 
+    # The job runs after this request's session is closed: hand it plain ids only.
+    ev_id, v_id, t_ids = ev.id, v.id, [t.id for t in traces]
+
     def work(s2: Session, r: EvalRun):
-        ev2, v2 = s2.get(Evaluator, ev.id), s2.get(EvaluatorVersion, v.id)
-        ts = s2.exec(select(Trace).where(Trace.id.in_([t.id for t in traces]))).all()
+        ev2, v2 = s2.get(Evaluator, ev_id), s2.get(EvaluatorVersion, v_id)
+        ts = s2.exec(select(Trace).where(Trace.id.in_(t_ids))).all()
         E.execute(s2, r, [(ev2, v2, t) for t in ts])
         m = E.split_metrics(s2, r, ev2.failure_mode_id)
         if kind == "final":

@@ -34,7 +34,10 @@ class Settings:
 
     @property
     def db_url(self) -> str:
-        return _env("EVALS_DB", f"sqlite:///{(BACKEND / 'evals_workbench.db').as_posix()}")
+        explicit = _env("EVALS_DB", "")
+        if explicit:
+            return explicit
+        return f"sqlite:///{default_db_path().as_posix()}"
 
     @property
     def llm_concurrency(self) -> int:
@@ -44,6 +47,25 @@ class Settings:
     def fallbacks_enabled(self) -> bool:
         # Server-side refusal fallback (Claude API only). Set EVALS_FALLBACKS=0 to turn off.
         return _env("EVALS_FALLBACKS", "1") not in ("0", "false", "no")
+
+
+def default_db_path() -> Path:
+    """Keep the live SQLite file out of synced folders (OneDrive/Dropbox slow it down and can corrupt it).
+    Windows: %LOCALAPPDATA%/EvalsWorkbench; elsewhere: ~/.local/share/evals-workbench.
+    A database left in backend/ by an earlier version is copied over once."""
+    import shutil
+
+    base = Path(os.environ["LOCALAPPDATA"]) / "EvalsWorkbench" if os.name == "nt" and os.environ.get("LOCALAPPDATA") \
+        else Path.home() / ".local" / "share" / "evals-workbench"
+    base.mkdir(parents=True, exist_ok=True)
+    target = base / "evals_workbench.db"
+    legacy = BACKEND / "evals_workbench.db"
+    if legacy.exists() and not target.exists():
+        for suffix in ("", "-wal", "-shm"):
+            src = Path(str(legacy) + suffix)
+            if src.exists():
+                shutil.copy2(src, Path(str(target) + suffix))
+    return target
 
 
 settings = Settings()

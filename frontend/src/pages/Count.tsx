@@ -52,6 +52,7 @@ export function Count() {
     queryFn: () => api.get<CountData>(`/api/projects/${pid}/count?${new URLSearchParams({ ...(facet ? { facet } : {}), ...(batch ? { batch_id: batch } : {}) })}`),
   });
   const [drill, setDrill] = useState<{ fid?: number; value?: string; title: string } | null>(null);
+  const [drillIds, setDrillIds] = useState<{ ids: number[]; title: string } | null>(null);
   const stage = status.data?.stages.find((s) => s.key === "count");
   if (stage?.status === "locked")
     return (
@@ -159,8 +160,10 @@ export function Count() {
             </table>
           </div>
           <p className="mt-2 text-xs text-mist-500">Counts are traces. A trace can carry several failure modes, so columns can sum to more than the number of failing traces. Click any number to see the traces behind it.</p>
+          <TransitionMatrix pid={pid} onOpen={(ids, title) => setDrillIds({ ids, title })} />
         </>
       )}
+      {drillIds && <IdsDrill pid={pid} ids={drillIds.ids} title={drillIds.title} product={project.data?.name} onClose={() => setDrillIds(null)} />}
       {drill && <Drill pid={pid} facet={d?.facet ?? undefined} drill={drill} product={project.data?.name} onClose={() => setDrill(null)} />}
     </div>
   );
@@ -297,4 +300,52 @@ function Prioritise({ pid, counts }: { pid: number; counts: Record<number, numbe
       </ol>
     </div>
   );
+}
+
+type Transitions = { rows: string[]; cols: string[]; cells: { from: string; to: string; count: number; trace_ids: number[] }[]; n: number };
+
+function TransitionMatrix({ pid, onOpen }: { pid: number; onOpen: (ids: number[], title: string) => void }) {
+  const q = useQuery({ queryKey: ["transitions", pid], queryFn: () => api.get<Transitions>(`/api/projects/${pid}/count/transitions`) });
+  const d = q.data;
+  if (!d || !d.n) return null;
+  const cell = (a: string, b: string) => d.cells.find((c) => c.from === a && c.to === b);
+  const max = Math.max(...d.cells.map((c) => c.count));
+  return (
+    <div className="mt-6">
+      <div className="h2">Transition failure matrix</div>
+      <p className="mb-2 mt-0.5 text-xs text-mist-400">
+        From {d.n} failing traces with tool steps and a first-failure mark: the last tool step that went fine (rows) against the step where things first went wrong (columns).
+      </p>
+      <div className="overflow-x-auto rounded-lg border border-ink-700">
+        <table className="tbl">
+          <thead><tr><th>Last successful step ↓ / first failing step →</th>{d.cols.map((c) => <th key={c} className="text-right">{c}</th>)}</tr></thead>
+          <tbody>
+            {d.rows.map((r) => (
+              <tr key={r}>
+                <td className="font-mono text-xs text-mist-100">{r}</td>
+                {d.cols.map((c) => {
+                  const x = cell(r, c);
+                  return (
+                    <td key={c} className="text-right tabular-nums" style={x ? { background: `rgb(var(--accent-400) / ${0.08 + (0.3 * x.count) / max})` } : undefined}>
+                      {x ? <button className="font-medium text-mist-50 hover:underline" onClick={() => onOpen(x.trace_ids, `${r} → ${c}`)}>{x.count}</button> : <span className="text-mist-500">·</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function IdsDrill({ pid, ids, title, product, onClose }: { pid: number; ids: number[]; title: string; product?: string; onClose: () => void }) {
+  const [open, setOpen] = useState<number | null>(ids[0] ?? null);
+  return open ? <TracePreview pid={pid} traceId={open} product={product} onClose={onClose}>
+    <div className="flex flex-wrap gap-1 border-b border-ink-700 px-4 py-2 text-xs">
+      <span className="text-mist-400">{title}:</span>
+      {ids.map((id, i) => <button key={id} className={`chip h-5 ${id === open ? "border-accent-400 text-accent-400" : ""}`} onClick={() => setOpen(id)}>trace {i + 1}</button>)}
+    </div>
+  </TracePreview> : null;
 }

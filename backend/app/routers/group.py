@@ -484,6 +484,43 @@ def count(pid: int, facet: Optional[str] = None, batch_id: Optional[int] = None,
     return tx.count_table(s, pid, facet or None, batch_id)
 
 
+def _step_label(e) -> str:
+    if e.role == "tool_call":
+        return e.tool_name or "tool call"
+    if e.role == "tool_result":
+        return f"{e.tool_name or 'tool'} result"
+    return "assistant reply" if e.role == "assistant" else "user turn"
+
+
+@router.get("/count/transitions")
+def transitions(pid: int, s: Session = Depends(get_session)):
+    """Transition failure matrix: last successful step (rows) → first failing step (columns),
+    from first-failure anchors on failing traces that contain tool steps."""
+    from ..models import Event
+
+    reviews = s.exec(select(Review).where(Review.project_id == pid, Review.verdict == "fail", Review.first_failure_event_id.is_not(None))).all()
+    cells: Counter = Counter()
+    examples: dict[str, list[int]] = {}
+    used = 0
+    for r in reviews:
+        evs = list(s.exec(select(Event).where(Event.trace_id == r.trace_id).order_by(Event.seq)).all())
+        if not any(e.role == "tool_call" for e in evs):
+            continue
+        idx = next((i for i, e in enumerate(evs) if e.id == r.first_failure_event_id), None)
+        if idx is None:
+            continue
+        before = [e for e in evs[:idx] if e.role == "tool_call"]
+        last_ok = before[-1].tool_name if before else "conversation start"
+        first_bad = _step_label(evs[idx])
+        cells[(last_ok, first_bad)] += 1
+        examples.setdefault(f"{last_ok}→{first_bad}", []).append(r.trace_id)
+        used += 1
+    rows = sorted({a for a, _ in cells}, key=lambda x: (x != "conversation start", x))
+    cols = sorted({b for _, b in cells})
+    return {"rows": rows, "cols": cols, "cells": [{"from": a, "to": b, "count": n, "trace_ids": examples[f"{a}→{b}"]} for (a, b), n in cells.items()],
+            "n": used}
+
+
 @router.get("/count/traces")
 def count_traces(pid: int, failure_mode_id: Optional[int] = None, facet: Optional[str] = None, value: Optional[str] = None,
                  s: Session = Depends(get_session)):

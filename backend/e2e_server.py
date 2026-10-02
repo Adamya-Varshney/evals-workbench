@@ -1,10 +1,11 @@
 """Start the API on a throwaway database for the Playwright test."""
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-db = HERE / "e2e.db"
+db = Path(tempfile.gettempdir()) / "evals_workbench_e2e.db"  # outside synced folders (OneDrive slows SQLite writes)
 for suffix in ("", "-wal", "-shm"):
     p = Path(str(db) + suffix)
     if p.exists():

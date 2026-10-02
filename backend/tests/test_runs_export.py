@@ -5,7 +5,7 @@ import subprocess
 import sys
 import zipfile
 
-from tests.helpers import TRUTH
+from tests.helpers import TRUTH, wait_run
 from tests.test_evaluators import setup_taxonomy
 
 
@@ -26,9 +26,9 @@ def _validated_suite(client, pid):
     for it in qq["items"]:
         present = "no_handoff" in TRUTH[it["external_id"]]["failures"]
         client.put(f"{base}/ground_truth/{ids['no_handoff']}/{it['trace_id']}", json={"label": present, "critique": "asked for a person" if present else "ok"})
-    client.post(f"{base}/evaluators/{jd['id']}/run", json={"split": "dev"})
+    wait_run(client, pid, client.post(f"{base}/evaluators/{jd['id']}/run", json={"split": "dev"}).json()["run_id"])
     fin = client.post(f"{base}/evaluators/{jd['id']}/run", json={"split": "test"}).json()
-    assert client.get(f"{base}/runs/{fin['run_id']}").json()["metrics"]["passed"]
+    assert wait_run(client, pid, fin["run_id"])["metrics"]["passed"]
     return bid, ids, ck, jd
 
 
@@ -42,6 +42,7 @@ def test_run_compare_experiment_export(demo, tmp_path):
     assert {e["id"] for e in est["evaluators"]} == {ck["id"], jd["id"]}
     assert est["llm_calls"] + est["cached"] == 60 and est["cached"] > 0  # traces judged during validation are cached
     run2 = client.post(f"{base}/suite/run", json={"batch_id": b2["id"]}).json()["run_id"]
+    wait_run(client, pid, run2, suite=True)
     rep = client.get(f"{base}/suite/runs/{run2}/report", params={"facet": "channel"}).json()
     assert rep["status"] == "done" and rep["n_traces"] == 60
     judge = next(e for e in rep["evaluators"] if e["type"] == "judge")
@@ -54,6 +55,7 @@ def test_run_compare_experiment_export(demo, tmp_path):
     assert rep["pass_all"]["n"] == 60 and rep["pass_all_by_facet"]
 
     run1 = client.post(f"{base}/suite/run", json={"batch_id": bid}).json()["run_id"]
+    wait_run(client, pid, run1, suite=True)
     cmp_ = client.get(f"{base}/suite/compare", params={"a": run1, "b": run2}).json()
     assert len(cmp_["rows"]) == 2 and all(r["delta"] is not None for r in cmp_["rows"])
     x = client.post(f"{base}/experiments", json={"hypothesis": "v1.4 SMS rule reduces markdown", "change": "prompt v1.4", "result": "markdown down",

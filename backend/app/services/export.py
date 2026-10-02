@@ -42,7 +42,7 @@ def _pct(x):
 def build_bundle(s: Session, p: Project) -> tuple[bytes, str]:
     buf = io.BytesIO()
     z = zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED)
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    stamp = datetime.now().astimezone().strftime("%Y-%m-%d")
     root = f"evals_{_slug(p.name)}_{stamp}/"
 
     def w(name: str, data: str) -> None:

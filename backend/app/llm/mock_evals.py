@@ -117,3 +117,56 @@ def _run_judge(ctx: dict, prompt: str) -> dict:
         failure = True
         critique += " (Uncertain reading of this trace.)"
     return {"critique": critique, "failure": failure}
+
+
+@responder("synthetic_tuples")
+def _syn_tuples(ctx: dict, prompt: str) -> dict:
+    import itertools
+
+    dims = [d for d in ctx.get("dimensions", []) if d.get("values")]
+    seen = {tuple(sorted(v.items())) for v in ctx.get("existing", [])}
+    out = []
+    for combo in itertools.product(*[d["values"] for d in dims]):
+        vals = {d["name"]: v for d, v in zip(dims, combo)}
+        if tuple(sorted(vals.items())) in seen:
+            continue
+        out.append({"values": [{"dimension": k, "value": v} for k, v in vals.items()]})
+        if len(out) >= ctx.get("count", 20):
+            break
+    return {"tuples": out}
+
+
+_OPENERS = ["hi", "Hello,", "hey there", "Good morning.", "um hi", ""]
+_FEATURE_ASKS = {
+    "availability search": "do you have any 2 bedrooms open next month",
+    "tour booking": "can I come see an apartment this weekend",
+    "reschedule": "I need to move my tour to another day",
+    "maintenance request": "my kitchen sink is leaking",
+    "policy question": "what's your pet policy, I have a dog",
+}
+_SCENARIO_TAILS = {
+    "nothing matches": "my budget is only $900",
+    "ambiguous request": "or maybe a studio, not sure",
+    "asks for a human": "actually can I just talk to a real person",
+    "changes their mind": "wait, actually make that Sunday instead",
+}
+
+
+@responder("synthetic_inputs")
+def _syn_inputs(ctx: dict, prompt: str) -> dict:
+    msgs = []
+    for i, t in enumerate(ctx.get("tuples", [])):
+        v = t["values"]
+        ask = _FEATURE_ASKS.get(v.get("feature", ""), v.get("feature", "question about the apartments"))
+        tail = _SCENARIO_TAILS.get(v.get("scenario", ""), "")
+        persona = v.get("persona", "")
+        opener = _OPENERS[(t["id"] + i) % len(_OPENERS)]
+        m = " ".join(x for x in [opener, ask + ("," if tail else "?"), tail + ("?" if tail else "")] if x)
+        if "terse" in persona:
+            m = (ask.split(",")[0] + "?").lower()
+        elif "non-native" in persona:
+            m = m.replace("do you have any", "you have").replace("I need to", "I am needing to")
+        elif "frustrated" in persona:
+            m = m + " This is the second time I'm asking."
+        msgs.append({"tuple_id": t["id"], "message": m.strip()})
+    return {"messages": msgs}

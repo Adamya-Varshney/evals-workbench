@@ -36,7 +36,7 @@ export function Layout() {
   const seg = loc.pathname.split("/")[3] ?? "";
   const reviewing = seg === "review";
   const current = status.data?.stages.find((s) => STAGE_ROUTES[s.key] === seg);
-  const pageName = current?.title ?? (seg === "settings" ? "Settings" : "Overview");
+  const pageName = current?.title ?? ({ settings: "Settings", glossary: "Glossary", synthetic: "Synthetic inputs" } as Record<string, string>)[seg] ?? "Overview";
   const ai = status.data?.ai;
 
   return (
@@ -57,6 +57,7 @@ export function Layout() {
             </span>
           )}
           <button onClick={() => setDrawer(true)} className="btn-quiet btn-sm" title="Every prompt sent to the model">AI activity</button>
+          <NavLink to={`/p/${pid}/glossary`} className="btn-quiet btn-sm">Glossary</NavLink>
           <NavLink to={`/p/${pid}/settings`} className="btn-quiet btn-sm">Settings</NavLink>
           <button onClick={toggleTheme} className="btn-quiet btn-sm w-7 justify-center px-0" title={`Switch to ${theme === "light" ? "dark" : "light"} theme`} aria-label="Toggle theme">
             {theme === "light" ? "☾" : "☀"}

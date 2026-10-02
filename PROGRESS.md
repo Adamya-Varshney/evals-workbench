@@ -78,4 +78,40 @@
 4. Edit a mode's definition and watch its labels move into **Needs re-check**.
 5. **Count and prioritise** → pivot by channel → click a number to see the traces. Set severities, drag to reorder.
 
-## Next: Phase 4 — Decide, fix log and code checks
+## Phase 4 — Decide, fix log, code checks ✅
+- One decision card per failure mode: Fix now / Code check / LLM judge / Park, with the helper questions. The judge option shows its cost honestly (~100+ labels plus upkeep). Soft warnings appear once the suite grows past 2–3 checks or 1–2 judges.
+- Fix log: what changed, when, and which prompt version. The before rate is measured on earlier batches and the after rate on the next batch reviewed.
+- Code-check engine (`backend/app/checks.py`): regex present/absent, markdown preset, tool called / not called, tool called more than N times, required tool arguments, length limits, JSON against a schema. Every rule can be scoped by any facet (e.g. SMS only). Custom Python `check(trace) -> bool` runs in an isolated subprocess with a timeout.
+- "✦ Draft with AI" for checks. It says plainly when a failure needs a judge or Python instead of rules. You approve a draft by saving it as a version.
+- "Run on reviewed traces" shows the check next to your labels (disagreements first). **Activate** stays disabled until you have seen at least one correct fail and one correct pass. Editing an active check puts it back to draft.
+- Later review rounds: building a batch after a taxonomy exists starts round 2+, where quick-tag chips appear under the note.
+
+## Phase 5 — LLM judges and validation ✅
+- One judge per failure mode, enforced. Three-part prompt: (1) "the failure occurs when", (2) "it is NOT a failure when", (3) a critique first, then `{critique, failure}` as structured output.
+- Context selector (last assistant turn, full conversation, tool calls, system prompt, business facts), defaulting to the minimum. Few-shot examples come from the train split only. "View exact prompt" shows precisely what the judge receives. Every version is kept.
+- Ground truth: seed from error analysis, then label in a focused, keyboard-driven queue (Y/N, critique, Ctrl+Enter). Judge output is never shown there. Splits are 15/42.5/42.5, stratified by label and fixed when a trace is first labelled. A low-confidence badge appears when dev or test has fewer than 30 of either class.
+- Dev loop: confusion matrix, TPR and TNR with Wilson intervals, raw agreement shown small with its trap-metric tooltip next to the always-pass score. The disagreement queue offers: add to failure criteria / add to not-a-failure (each makes a new version), promote to few-shot (train only, explained), correct my label (logged), edit the definition. Plus a version table (dev and test TPR/TNR per version).
+- Final validation on the locked test split: every run is logged, repeat runs trigger a warning, and a dev-to-test gap over 10 points is flagged as likely overfitting. Status becomes **Validated** only when test TPR and TNR both meet the threshold (default 0.80, target 0.90, configurable per judge).
+
+## Phase 6 — Run and measure, experiments, export ✅
+- Run the active suite on any batch as a background job: a cost estimate first, a concurrency limit, and caching keyed on evaluator version × trace content hash.
+- Report: failure rate per evaluator with a Wilson CI. For judges, the **corrected rate** θ = (p_obs + TNR − 1)/(TPR + TNR − 1) with a 2,000-iteration bootstrap CI using test-split TPR/TNR; it refuses when TPR + TNR ≤ 1. Also the pass-all rate and a breakdown by any facet.
+- Compare two runs with per-evaluator deltas (▲ worse / ▼ better). Log an experiment with its hypothesis, change and result; the running count is shown.
+- "Send flagged traces to review" builds a prioritised batch. Verdicts stay hidden until you save your own.
+- Export zip: `EVAL_SPEC.md` (with the operating guidance), `failure_taxonomy.json`, `error_analysis.csv`, `judges/<slug>.md` (DRAFT banner if not validated), `checks/code_checks.py` (pytest), `datasets/<slug>_{train,dev,test}.jsonl`, `golden_regression.jsonl`, and a self-contained `run_evals.py` + `suite.json` + `evals_lib.py`.
+
+## Phase 7 — Synthetic inputs, transition matrix, glossary, README ✅
+- Synthetic generator: editable dimensions (feature/scenario/persona), a grounding field, and at least 20 hand-written tuples before AI unlocks. LLM call 1 proposes tuples (accept/reject); separate LLM call 2 writes the user messages. Export as JSONL/CSV, then import the resulting traces tagged synthetic with their tuple. A caution banner covers specialised domains.
+- Transition failure matrix on Count: last successful tool step → first failing step, from first-failure marks, with clickable cells.
+- Glossary page (top bar), plus tooltips on technical terms throughout.
+- README covering setup, configuration, the workflow, importing your own traces, the bundle, and development.
+
+## Hardening found during the build
+- Background jobs pass plain ids to worker threads. This fixed a crash where judge runs touched objects from a closed request session. Tests now run jobs truly in the background and poll, so this class of bug is caught.
+- SQLite busy timeout raised to 30s. Run progress keeps polling in background tabs.
+- The database now lives in local app data (`%LOCALAPPDATA%\EvalsWorkbench`), not inside OneDrive, which slowed writes and risks corrupting a live SQLite file. The old file was migrated automatically.
+- The e2e test's database lives in the system temp folder for the same reason. It passed 3 of 3 runs after the move.
+
+**Final state:** 50 backend tests pass, the frontend typechecks and builds, and the Playwright keyboard-only review test passes.
+
+**Definition-of-done coverage (mock mode):** steps 1–9 are exercised end to end by `test_runs_export.py` plus `test_evaluators.py`, ending with extracting the bundle and running `run_evals.py` successfully. Live-key runs have not been executed in this environment because there is no `ANTHROPIC_API_KEY`.
