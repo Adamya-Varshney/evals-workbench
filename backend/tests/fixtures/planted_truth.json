@@ -1,0 +1,710 @@
+{
+ "lk-0901-1098": {
+  "failures": [
+   "markdown_sms",
+   "wrong_date"
+  ],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0901-ca72": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0901-dc2b": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "application",
+  "channel": "sms"
+ },
+ "lk-0901-b5de": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0901-ba7a": {
+  "failures": [
+   "no_handoff",
+   "promise_no_followup"
+  ],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0902-079f": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0902-04a1": {
+  "failures": [],
+  "scenario": "reschedule",
+  "channel": "voice"
+ },
+ "lk-0902-325d": {
+  "failures": [
+   "virtual_vs_inperson"
+  ],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0902-ee74": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0903-08e1": {
+  "failures": [
+   "duplicate_booking"
+  ],
+  "scenario": "reschedule",
+  "channel": "chat"
+ },
+ "lk-0903-6a50": {
+  "failures": [
+   "virtual_vs_inperson",
+   "wrong_date"
+  ],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0903-5c0f": {
+  "failures": [],
+  "scenario": "application",
+  "channel": "chat"
+ },
+ "lk-0903-4612": {
+  "failures": [
+   "wrong_date"
+  ],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0904-8fb1": {
+  "failures": [
+   "ignores_constraint",
+   "markdown_sms"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0904-9c96": {
+  "failures": [
+   "wrong_date"
+  ],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0904-9e9d": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0904-5df7": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0905-cf56": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "chat"
+ },
+ "lk-0905-a21c": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0905-78f9": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0905-04df": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0906-ff32": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "voice"
+ },
+ "lk-0906-47ba": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0906-5f05": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "availability",
+  "channel": "voice"
+ },
+ "lk-0906-40ad": {
+  "failures": [],
+  "scenario": "not_ready",
+  "channel": "chat"
+ },
+ "lk-0907-63dc": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0907-9058": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "voice"
+ },
+ "lk-0907-42ab": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0907-306b": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0908-7cf6": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0908-3f24": {
+  "failures": [
+   "duplicate_booking"
+  ],
+  "scenario": "reschedule",
+  "channel": "chat"
+ },
+ "lk-0908-b93b": {
+  "failures": [
+   "promise_no_followup"
+  ],
+  "scenario": "application",
+  "channel": "sms"
+ },
+ "lk-0908-a85b": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0908-1f9c": {
+  "failures": [],
+  "scenario": "not_ready",
+  "channel": "sms"
+ },
+ "lk-0909-d8e5": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0909-6077": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0909-52a2": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0909-c358": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0910-d4b8": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0910-8003": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "voice"
+ },
+ "lk-0910-d7b5": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0910-3581": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "not_ready",
+  "channel": "sms"
+ },
+ "lk-0911-b984": {
+  "failures": [],
+  "scenario": "application",
+  "channel": "sms"
+ },
+ "lk-0911-fdbc": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0911-e83a": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0911-b147": {
+  "failures": [
+   "promise_no_followup"
+  ],
+  "scenario": "maintenance",
+  "channel": "chat"
+ },
+ "lk-0912-703a": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0912-18b9": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "chat"
+ },
+ "lk-0912-8865": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0912-8901": {
+  "failures": [],
+  "scenario": "maintenance",
+  "channel": "chat"
+ },
+ "lk-0913-f3aa": {
+  "failures": [],
+  "scenario": "not_ready",
+  "channel": "chat"
+ },
+ "lk-0913-ede2": {
+  "failures": [
+   "markdown_sms",
+   "robotic_dead_end"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0913-5593": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "not_ready",
+  "channel": "chat"
+ },
+ "lk-0913-69ce": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0914-53dc": {
+  "failures": [],
+  "scenario": "wrong_number",
+  "channel": "sms"
+ },
+ "lk-0914-dff5": {
+  "failures": [],
+  "scenario": "maintenance",
+  "channel": "chat"
+ },
+ "lk-0914-d1d7": {
+  "failures": [
+   "wrong_date"
+  ],
+  "scenario": "tour",
+  "channel": "email"
+ },
+ "lk-0914-2a02": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0915-45b0": {
+  "failures": [],
+  "scenario": "reschedule",
+  "channel": "sms"
+ },
+ "lk-0915-d328": {
+  "failures": [
+   "virtual_vs_inperson"
+  ],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0915-f334": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0915-82ae": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0915-bcfa": {
+  "failures": [],
+  "scenario": "reschedule",
+  "channel": "chat"
+ },
+ "lk-0916-0fcc": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0916-dfc8": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0916-6685": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0916-68b4": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "sms"
+ },
+ "lk-0917-0441": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0917-0fd1": {
+  "failures": [],
+  "scenario": "maintenance",
+  "channel": "sms"
+ },
+ "lk-0917-c65c": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0917-4cda": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "chat"
+ },
+ "lk-0918-604c": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "not_ready",
+  "channel": "email"
+ },
+ "lk-0918-0dc8": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "email"
+ },
+ "lk-0918-dbcf": {
+  "failures": [],
+  "scenario": "maintenance",
+  "channel": "sms"
+ },
+ "lk-0918-bf6f": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0919-afe0": {
+  "failures": [
+   "virtual_vs_inperson"
+  ],
+  "scenario": "tour",
+  "channel": "email"
+ },
+ "lk-0919-9ecc": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0919-35ec": {
+  "failures": [],
+  "scenario": "maintenance",
+  "channel": "sms"
+ },
+ "lk-0919-54d9": {
+  "failures": [
+   "wrong_date"
+  ],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0920-1d72": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0920-5854": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "sms"
+ },
+ "lk-0920-60b1": {
+  "failures": [
+   "duplicate_booking"
+  ],
+  "scenario": "reschedule",
+  "channel": "sms"
+ },
+ "lk-0920-e63d": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0921-e5cf": {
+  "failures": [],
+  "scenario": "application",
+  "channel": "sms"
+ },
+ "lk-0921-d23d": {
+  "failures": [
+   "markdown_sms",
+   "promise_no_followup"
+  ],
+  "scenario": "maintenance",
+  "channel": "sms"
+ },
+ "lk-0921-8cf5": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0921-112f": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0922-a5bd": {
+  "failures": [
+   "promise_no_followup"
+  ],
+  "scenario": "maintenance",
+  "channel": "chat"
+ },
+ "lk-0922-7f90": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "email"
+ },
+ "lk-0922-4256": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0922-5db9": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "policy",
+  "channel": "sms"
+ },
+ "lk-0922-7078": {
+  "failures": [
+   "markdown_sms"
+  ],
+  "scenario": "policy",
+  "channel": "sms"
+ },
+ "lk-0923-5d50": {
+  "failures": [
+   "duplicate_booking"
+  ],
+  "scenario": "reschedule",
+  "channel": "voice"
+ },
+ "lk-0923-96de": {
+  "failures": [
+   "no_handoff"
+  ],
+  "scenario": "human_request",
+  "channel": "email"
+ },
+ "lk-0923-95c1": {
+  "failures": [
+   "ignores_constraint"
+  ],
+  "scenario": "availability",
+  "channel": "voice"
+ },
+ "lk-0923-5aca": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0924-c81b": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "not_ready",
+  "channel": "sms"
+ },
+ "lk-0924-af6c": {
+  "failures": [
+   "ignores_constraint",
+   "promise_no_followup"
+  ],
+  "scenario": "availability",
+  "channel": "email"
+ },
+ "lk-0924-7bae": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "sms"
+ },
+ "lk-0924-4cc6": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "voice"
+ },
+ "lk-0925-ec2c": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "voice"
+ },
+ "lk-0925-aa1d": {
+  "failures": [
+   "virtual_vs_inperson"
+  ],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0925-1716": {
+  "failures": [],
+  "scenario": "reschedule",
+  "channel": "chat"
+ },
+ "lk-0925-841e": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "voice"
+ },
+ "lk-0926-06aa": {
+  "failures": [
+   "promise_no_followup"
+  ],
+  "scenario": "policy",
+  "channel": "email"
+ },
+ "lk-0926-555b": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "email"
+ },
+ "lk-0926-2b13": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "email"
+ },
+ "lk-0926-6577": {
+  "failures": [],
+  "scenario": "not_ready",
+  "channel": "sms"
+ },
+ "lk-0927-6299": {
+  "failures": [],
+  "scenario": "not_ready",
+  "channel": "email"
+ },
+ "lk-0927-5d6f": {
+  "failures": [],
+  "scenario": "tool_error",
+  "channel": "chat"
+ },
+ "lk-0927-375f": {
+  "failures": [
+   "ignores_constraint",
+   "markdown_sms"
+  ],
+  "scenario": "availability",
+  "channel": "sms"
+ },
+ "lk-0927-1653": {
+  "failures": [],
+  "scenario": "policy",
+  "channel": "chat"
+ },
+ "lk-0928-b5e8": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "voice"
+ },
+ "lk-0928-8c51": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "sms"
+ },
+ "lk-0928-d0b2": {
+  "failures": [
+   "robotic_dead_end"
+  ],
+  "scenario": "not_ready",
+  "channel": "chat"
+ },
+ "lk-0928-d5a4": {
+  "failures": [],
+  "scenario": "reschedule",
+  "channel": "sms"
+ },
+ "lk-0929-06ed": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "chat"
+ },
+ "lk-0929-a8a0": {
+  "failures": [],
+  "scenario": "tour",
+  "channel": "email"
+ },
+ "lk-0929-d148": {
+  "failures": [],
+  "scenario": "human_request",
+  "channel": "chat"
+ },
+ "lk-0929-617b": {
+  "failures": [],
+  "scenario": "availability",
+  "channel": "sms"
+ }
+}
