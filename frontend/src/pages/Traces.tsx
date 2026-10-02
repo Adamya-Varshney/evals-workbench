@@ -32,7 +32,7 @@ export function Traces() {
   };
   const n = status.data?.counts.traces ?? 0;
   return (
-    <div className="mx-auto max-w-6xl px-8 py-10">
+    <div className="mx-auto max-w-[1400px] px-6 py-6">
       <PageHeader
         title="Get traces"
         sub="A trace is the full record of one interaction: system prompt, user messages, tool calls and results, assistant replies, and metadata."
@@ -80,7 +80,7 @@ function AiNotice({ pid, enabled }: { pid: number; enabled: boolean }) {
     },
   });
   return (
-    <div className="mb-6 flex items-center justify-between gap-4 rounded-lg border border-ink-700 bg-ink-900 px-4 py-3 text-sm">
+    <div className="mb-5 flex items-center justify-between gap-4 rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-[13px]">
       <div className="text-mist-300">
         <span className="font-semibold text-mist-100">Privacy:</span> trace content is sent to the Anthropic API whenever an AI-assist feature runs (proposing categories, suggesting assignments, drafting, judging, finding similar traces). Nothing is sent while you import or review.
       </div>
@@ -90,9 +90,9 @@ function AiNotice({ pid, enabled }: { pid: number; enabled: boolean }) {
           role="switch"
           aria-checked={enabled}
           onClick={() => toggle.mutate()}
-          className={`relative h-6 w-11 rounded-full border transition ${enabled ? "border-gold-400 bg-gold-400/80" : "border-ink-500 bg-ink-700"}`}
+          className={`relative h-5 w-9 rounded-full transition ${enabled ? "bg-accent-400" : "bg-ink-600"}`}
         >
-          <span className={`absolute top-0.5 h-4.5 h-[18px] w-[18px] rounded-full bg-ink-950 transition ${enabled ? "left-[22px]" : "left-0.5"}`} />
+          <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${enabled ? "left-[18px]" : "left-0.5"}`} />
         </button>
         <span className="w-7 text-xs text-mist-400">{enabled ? "on" : "off"}</span>
       </label>
@@ -131,7 +131,7 @@ function ImportBox({ pid, isDemo, onStaged }: { pid: number; isDemo: boolean; on
         const f = e.dataTransfer.files[0];
         if (f) send(f);
       }}
-      className={`card flex flex-col items-center gap-3 border-dashed p-8 text-center ${drag ? "border-gold-400 bg-ink-850" : ""}`}
+      className={`card flex flex-col items-center gap-3 border-dashed p-6 text-center ${drag ? "border-accent-400 bg-ink-850" : ""}`}
     >
       <div className="h2">Import traces</div>
       <p className="max-w-xl text-sm text-mist-300">
@@ -270,7 +270,7 @@ function MappingScreen({ pid, product, job, onCancel, onDone }: { pid: number; p
             {preview?.traces.map((t, i) => (
               <div key={i} className="card p-4">
                 <div className="mb-3 flex flex-wrap gap-1.5 text-xs">
-                  <span className="chip border-gold-500/40 text-gold-300">{t.channel}</span>
+                  <span className="chip border-accent-500/40 text-accent-300">{t.channel}</span>
                   <span className="chip">{t.external_id}</span>
                   {Object.entries(t.meta).filter(([k]) => k !== "channel").slice(0, 6).map(([k, v]) => <span key={k} className="chip">{k}: {String(v)}</span>)}
                 </div>
@@ -292,7 +292,7 @@ function ImportReport({ report }: { report: any }) {
       <div className="h2">Import report</div>
       <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
         <div><div className="label">Imported</div><div className="text-2xl font-semibold text-pass-400">{report.imported}</div></div>
-        <div><div className="label">Skipped</div><div className="text-2xl font-semibold text-gold-300">{report.skipped}</div></div>
+        <div><div className="label">Skipped</div><div className="text-2xl font-semibold text-accent-300">{report.skipped}</div></div>
         <div><div className="label">By channel</div>{Object.entries(report.channels ?? {}).map(([k, v]) => `${k} ${v}`).join(" · ") || "—"}</div>
       </div>
       {report.skipped > 0 && (
@@ -410,21 +410,28 @@ function Batches({ pid, total }: { pid: number; total: number }) {
         <button className="btn-primary" onClick={() => create.mutate()} disabled={create.isPending}>Build batch</button>
       </div>
       {err && <div className="mt-2"><Notice tone="danger">{err}</Notice></div>}
-      <div className="mt-4 space-y-2">
-        {batches.data?.map((b) => (
-          <div key={b.id} className="flex items-center gap-4 rounded-lg border border-ink-700 bg-ink-900 px-4 py-3">
-            <div className="min-w-0 flex-1">
-              <div className="font-medium text-mist-50">{b.name}</div>
-              <div className="text-xs text-mist-400">{Object.entries(b.reasons).map(([k, v]) => `${v} ${k.replace("_", " ")}`).join(" · ")}</div>
-            </div>
-            <div className="w-48">
-              <div className="mb-1 text-right text-xs text-mist-400">{b.reviewed} of {b.size} reviewed</div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-ink-700"><div className="h-full bg-gold-400" style={{ width: `${(100 * b.reviewed) / Math.max(1, b.size)}%` }} /></div>
-            </div>
-            <button className="btn-ghost" onClick={() => nav(`/p/${pid}/review?batch=${b.id}`)}>Review →</button>
-          </div>
-        ))}
-      </div>
+      {!!batches.data?.length && (
+        <div className="mt-4 overflow-hidden rounded-lg border border-ink-700">
+          <table className="tbl">
+            <thead>
+              <tr><th>Batch</th><th>Sample</th><th className="w-56">Progress</th><th className="w-28" /></tr>
+            </thead>
+            <tbody>
+              {batches.data.map((b) => (
+                <tr key={b.id}>
+                  <td><div className="font-medium text-mist-50">{b.name}</div><div className="text-xxs text-mist-500">{new Date(b.created_at).toLocaleString()}</div></td>
+                  <td className="text-xs text-mist-400">{Object.entries(b.reasons).map(([k, v]) => `${v} ${k.replace("_", " ")}`).join(" · ")}</td>
+                  <td>
+                    <div className="mb-1 text-xs tabular-nums text-mist-300">{b.reviewed} of {b.size} reviewed</div>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-ink-800"><div className="h-full bg-accent-400" style={{ width: `${(100 * b.reviewed) / Math.max(1, b.size)}%` }} /></div>
+                  </td>
+                  <td className="text-right"><button className="btn-ghost btn-sm" onClick={() => nav(`/p/${pid}/review?batch=${b.id}`)}>Review →</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

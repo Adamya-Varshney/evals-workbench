@@ -1,19 +1,26 @@
 /** @type {import('tailwindcss').Config} */
+// Colours are CSS variables (see src/index.css) so light and dark themes share class names.
+// ink-* = surfaces (950 is the page), mist-* = text (50 is strongest), accent-* = brand.
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+const scale = (prefix, steps) => Object.fromEntries(steps.map((s) => [s, v(`${prefix}-${s}`)]));
+
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        ink: { 950: "#070d1a", 900: "#0b1324", 850: "#0f1a2f", 800: "#13203a", 700: "#1b2b4b", 600: "#263a60", 500: "#3a5079" },
-        mist: { 50: "#f3f6fb", 100: "#e3e9f3", 200: "#c6d1e3", 300: "#9fb0cb", 400: "#7d8fae", 500: "#5f7294" },
-        gold: { 300: "#f6d58e", 400: "#f0c062", 500: "#e3a73a", 600: "#c48a22" },
-        pass: { 400: "#5fd3a5", 500: "#34b885", 900: "#0f3a2c" },
-        fail: { 400: "#ff8b7a", 500: "#f2654f", 900: "#47201b" },
+        ink: scale("ink", [950, 900, 850, 800, 700, 600, 500]),
+        mist: scale("mist", [50, 100, 200, 300, 400, 500]),
+        accent: scale("accent", [300, 400, 500, 600]),
+        pass: scale("pass", [400, 500, 900]),
+        fail: scale("fail", [400, 500, 900]),
+        warn: scale("warn", [400, 900]),
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "Segoe UI", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "Consolas", "monospace"],
       },
+      fontSize: { xxs: ["11px", "15px"] },
       maxWidth: { read: "72ch" },
     },
   },

@@ -21,4 +21,33 @@
 4. **Get traces** → **Load the Larkspur demo traces**. Change the mapping, tick "Phone numbers" and watch the preview update. Click **Import**, then check the report (3 skipped, with reasons) and the facets.
 5. Build a batch of 100 (try "Stratified by channel" too). Step 2 turns ✓ and step 3 unlocks.
 
-## Next: Phase 2 — Review screen
+## Phase 2 — Review screen + UI restyle ✅
+
+**UI restyle (per feedback: "like Braintrust or LangSmith")**
+- Neutral zinc design system built from CSS-variable tokens. Light is the default, with a dark toggle in the top bar that is remembered per browser. 13px dense type, table-first layouts.
+- App shell: a top bar with breadcrumbs (project / page), a model/mock badge, AI activity, Settings and the theme toggle. A slim left workflow sidebar with step status icons (shape, not colour alone) that collapses to icons while reviewing.
+- Overview is now a next-action card, four stat tiles and a stage table. Projects, batches and the AI activity log are tables.
+- The trace viewer has LangSmith-style tabs: **Conversation** (as the end user saw it), **Steps** (an event tree with a detail pane) and **Raw JSON**.
+
+**Review screen** (`frontend/src/pages/Review.tsx`, `backend/app/routers/review.py`)
+- Three panes: queue (search, channel and status filters, verdict badges), the trace with its metadata strip, and the judgment panel.
+- Pass/Fail with one key, a free-text note with autosave, a first-failure anchor (click a turn, or `[` `]` then `A`), come back later, and undo (server-side history; rapid note edits collapse into one undo step).
+- Hotkeys: J/K and the arrow keys, P, F (focuses the note), N, S, T, D, R, B, Z, `/`, `?`, Esc, and Ctrl/⌘+Enter for save and next from anywhere. Neighbouring traces are prefetched.
+- Progress ("12 of 100 reviewed"), pass/fail tally, session timer, median seconds per trace, and a nudge after 2 minutes on one trace (configurable).
+- Saturation: new problem types in the last 20 reviews, with a sparkline and a suggestion to stop once it reaches zero.
+- System prompt marked "same as / changed from previous trace". Business facts and channel rules open in a slide-over (B). In multi-turn fails you are prompted to mark the first upstream failure.
+- No category picker in the first round. Quick-tag chips (1–9) appear only in later rounds, after the note.
+- AI assist is locked until 30 hand reviews and respects the global switch. "Find similar traces" uses a keyword prefilter, then ranking by the LLM.
+- Evaluator verdicts are hidden until you have saved your own judgment.
+- Robustness: a unique review per trace, saves serialised per trace on the client, and a write lock on the server.
+
+**Tests**: 32 backend tests pass (including review save, undo, defer, stats, saturation and the AI gate). The **Playwright keyboard-only review test passes** (`python dev.py e2e`).
+
+**Try it**
+1. `python dev.py dev`, then open http://localhost:5173 → Open demo project (the light theme is new; ☾ in the top bar switches to dark).
+2. Add your reviewer name in Set up, then go to **Review traces**.
+3. Press `?` for shortcuts. Then `P`, `J`, `F`, type a note, `Esc`, `]` `]` `A` to mark the first failure, and `Ctrl+Enter` to save and move on.
+4. Watch the progress count, median s/trace and the "New problem types" indicator. Try the **Steps** tab and `R` for raw JSON.
+5. After 30 reviews, "Find similar traces" unlocks in the right panel.
+
+## Next: Phase 3 — Group failures and Count

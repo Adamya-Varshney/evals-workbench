@@ -3,6 +3,7 @@ import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { Later } from "./pages/Later";
 import { Projects } from "./pages/Projects";
+import { Review } from "./pages/Review";
 import { Settings } from "./pages/Settings";
 import { Setup } from "./pages/Setup";
 import { Traces } from "./pages/Traces";
@@ -15,7 +16,7 @@ export function App() {
         <Route index element={<Home />} />
         <Route path="setup" element={<Setup />} />
         <Route path="traces" element={<Traces />} />
-        <Route path="review" element={<Later title="Review traces" />} />
+        <Route path="review" element={<Review />} />
         <Route path="group" element={<Later title="Group failures" />} />
         <Route path="count" element={<Later title="Count and prioritise" />} />
         <Route path="decide" element={<Later title="Decide what each failure needs" />} />

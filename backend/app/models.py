@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from sqlalchemy import JSON, Column, Text
+from sqlalchemy import JSON, Column, Text, UniqueConstraint
 from sqlmodel import Field, SQLModel
 
 
@@ -126,6 +126,7 @@ class BatchTrace(SQLModel, table=True):
 # ---------- Stage 3: review ----------
 class Review(SQLModel, table=True):
     __tablename__ = "reviews"
+    __table_args__ = (UniqueConstraint("project_id", "trace_id", name="uq_review_trace"),)
     id: Optional[int] = Field(default=None, primary_key=True)
     project_id: int = Field(foreign_key="projects.id", index=True)
     trace_id: int = Field(foreign_key="traces.id", index=True)

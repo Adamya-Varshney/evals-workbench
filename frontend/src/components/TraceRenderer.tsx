@@ -64,7 +64,7 @@ function SystemPrompt({ text, open, onToggle, same, version }: { text: string; o
         <span className="font-semibold uppercase tracking-wider">System prompt</span>
         {version && <span className="chip">{version}</span>}
         {same === true && <span className="chip border-pass-500/40 text-pass-400">= same as previous trace</span>}
-        {same === false && <span className="chip border-gold-500/50 text-gold-300">≠ changed from previous trace</span>}
+        {same === false && <span className="chip border-accent-500/50 text-accent-300">≠ changed from previous trace</span>}
         <span className="ml-auto text-mist-500">
           <span className="kbd">S</span>
         </span>
@@ -113,10 +113,10 @@ function Anchorable({
       data-event-id={ev.id}
       onClick={onAnchor ? () => onAnchor(active ? null : ev.id) : undefined}
       title={onAnchor ? (active ? "Click to clear the first-failure marker" : "Click to mark this turn as the first failure") : undefined}
-      className={`relative ${onAnchor ? "cursor-pointer" : ""} ${active ? "rounded-xl ring-2 ring-gold-400 ring-offset-2 ring-offset-ink-950" : ""} ${focus ? "rounded-xl ring-1 ring-mist-400/60" : ""} ${className}`}
+      className={`relative ${onAnchor ? "cursor-pointer" : ""} ${active ? "rounded-xl ring-2 ring-accent-400 ring-offset-2 ring-offset-ink-950" : ""} ${focus ? "rounded-xl ring-1 ring-mist-400/60" : ""} ${className}`}
     >
       {active && (
-        <span className="absolute -top-3 right-2 z-10 rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink-950">⚑ first failure</span>
+        <span className="absolute -top-3 right-2 z-10 rounded-full bg-accent-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink-950">⚑ first failure</span>
       )}
       {children}
     </div>
@@ -132,9 +132,9 @@ function ToolCard({ ev, result, expanded }: { ev: TraceEvent; result?: TraceEven
   const resText = result?.tool_result ?? "";
   const isErr = /"error"|error:|timeout|exception/i.test(resText.slice(0, 200));
   return (
-    <div className="mx-auto w-full max-w-read rounded-lg border border-dashed border-ink-500 bg-ink-900/70 text-[12.5px]" onClick={(e) => e.stopPropagation()}>
+    <div className="mx-auto w-full max-w-read rounded-md border border-dashed border-ink-600 bg-ink-900 text-[12.5px]" onClick={(e) => e.stopPropagation()}>
       <button className="flex w-full items-start gap-2 px-3 py-1.5 text-left" onClick={() => setOpen(!isOpen)}>
-        <span className="mt-[1px] font-mono text-gold-400">⚙</span>
+        <span className="mt-[1px] font-mono text-accent-400">⚙</span>
         <span className="font-mono font-medium text-mist-100">{ev.tool_name || "tool"}</span>
         <span className="truncate font-mono text-mist-400">{keyArgs.join(" · ")}{args.length > 4 ? " …" : ""}</span>
         <span className="ml-auto font-mono text-mist-500">{isOpen ? "▾" : "▸"}</span>
@@ -197,7 +197,7 @@ function items(events: TraceEvent[]) {
 
 function SmsBody({ product, events, toolsExpanded, anchorId, onAnchor, focusEventId }: BodyProps) {
   return (
-    <div className="mx-auto w-full max-w-[420px] rounded-[2rem] border border-ink-600 bg-[#0d1220] p-3 shadow-2xl">
+    <div className="mx-auto w-full max-w-[420px] rounded-[2rem] border-[6px] border-ink-800 bg-ink-950 p-3 shadow-xl">
       <div className="mb-2 flex items-center justify-center gap-2 pt-1 text-[11px] text-mist-400">
         <span className="h-1.5 w-12 rounded-full bg-ink-600" />
       </div>
@@ -206,14 +206,14 @@ function SmsBody({ product, events, toolsExpanded, anchorId, onAnchor, focusEven
         {items(events).map(({ ev, result }) =>
           ev.role === "tool_call" ? (
             <Anchorable key={ev.id} ev={ev} anchorId={anchorId} onAnchor={onAnchor} focus={focusEventId === ev.id}>
-              <div className="py-1 opacity-90"><ToolCard ev={ev} result={result} expanded={toolsExpanded} /></div>
+              <div className="py-1"><ToolCard ev={ev} result={result} expanded={toolsExpanded} /></div>
             </Anchorable>
           ) : (
             <Anchorable key={ev.id} ev={ev} anchorId={anchorId} onAnchor={onAnchor} focus={focusEventId === ev.id}>
               <div className={`flex ${ev.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-[15px] leading-snug ${
-                    ev.role === "user" ? "rounded-br-md bg-[#2f7cf6] text-white" : "rounded-bl-md bg-[#2a2f3a] text-[#f2f4f8]"
+                    ev.role === "user" ? "rounded-br-md bg-[#2f7cf6] text-white" : "rounded-bl-md bg-ink-800 text-mist-50"
                   }`}
                   style={{ fontFamily: "-apple-system, 'Segoe UI', Roboto, sans-serif" }}
                 >
@@ -231,20 +231,20 @@ function SmsBody({ product, events, toolsExpanded, anchorId, onAnchor, focusEven
 
 function ChatBody({ product, events, toolsExpanded, anchorId, onAnchor, focusEventId }: BodyProps) {
   return (
-    <div className="mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border border-ink-600 bg-[#f7f8fb] text-[#1b2333] shadow-2xl">
-      <div className="flex items-center gap-2 bg-[#21324f] px-4 py-2.5 text-sm font-medium text-white">
+    <div className="mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-ink-700 bg-ink-950 text-mist-100 shadow-xl">
+      <div className="flex items-center gap-2 border-b border-ink-700 bg-ink-900 px-4 py-2.5 text-[13px] font-medium text-mist-100">
         <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" /> Chat · {product}
       </div>
       <div className="space-y-3 p-4">
         {items(events).map(({ ev, result }) =>
           ev.role === "tool_call" ? (
             <Anchorable key={ev.id} ev={ev} anchorId={anchorId} onAnchor={onAnchor} focus={focusEventId === ev.id}>
-              <div className="text-mist-100"><ToolCard ev={ev} result={result} expanded={toolsExpanded} /></div>
+              <div><ToolCard ev={ev} result={result} expanded={toolsExpanded} /></div>
             </Anchorable>
           ) : (
             <Anchorable key={ev.id} ev={ev} anchorId={anchorId} onAnchor={onAnchor} focus={focusEventId === ev.id}>
               <div className={`flex ${ev.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[82%] whitespace-pre-wrap break-words rounded-xl px-3.5 py-2.5 text-[15px] leading-relaxed ${ev.role === "user" ? "bg-[#21324f] text-white" : "border border-[#dfe3ec] bg-white"}`}>
+                <div className={`max-w-[82%] whitespace-pre-wrap break-words rounded-xl px-3.5 py-2.5 text-[15px] leading-relaxed ${ev.role === "user" ? "bg-accent-400 text-white" : "border border-ink-700 bg-ink-900"}`}>
                   {ev.content}
                 </div>
               </div>
@@ -301,7 +301,7 @@ function VoiceBody({ product, events, toolsExpanded, anchorId, onAnchor, focusEv
           ) : (
             <Anchorable key={ev.id} ev={ev} anchorId={anchorId} onAnchor={onAnchor} focus={focusEventId === ev.id}>
               <div className="grid grid-cols-[72px_1fr] gap-3">
-                <div className={`pt-0.5 text-right text-xs font-semibold uppercase tracking-wider ${ev.role === "user" ? "text-sky-300" : "text-gold-300"}`}>
+                <div className={`pt-0.5 text-right text-xs font-semibold uppercase tracking-wider ${ev.role === "user" ? "text-accent-400" : "text-pass-400"}`}>
                   {ev.role === "user" ? "Caller" : "Agent"}
                 </div>
                 <div className="whitespace-pre-wrap text-[15.5px] leading-relaxed text-mist-50">{ev.content}</div>

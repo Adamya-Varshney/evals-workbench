@@ -29,3 +29,9 @@ def respond(job: str, ctx: dict, prompt: str) -> dict:
 @responder("ping")
 def _ping(ctx: dict, prompt: str) -> dict:
     return {"ok": True, "echo": prompt[:40]}
+
+
+@responder("find_similar")
+def _find_similar(ctx: dict, prompt: str) -> dict:
+    cands = sorted(ctx.get("candidates", []), key=lambda c: -c["score"])[: ctx.get("k", 5)]
+    return {"matches": [{"id": c["id"], "why": f"Shares much of the same wording and intent (overlap {c['score']:.0%})."} for c in cands]}

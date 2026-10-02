@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import ROOT
 from .db import init_db
-from .routers import projects, system, traces
+from .routers import projects, review, system, traces
 
 
 @asynccontextmanager
@@ -22,6 +22,7 @@ app = FastAPI(title="Evals Workbench", lifespan=lifespan)
 app.include_router(system.router)
 app.include_router(projects.router)
 app.include_router(traces.router)
+app.include_router(review.router)
 
 # Serve the built frontend when it exists (production-style `python dev.py serve`).
 DIST = ROOT / "frontend" / "dist"

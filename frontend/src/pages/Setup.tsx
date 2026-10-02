@@ -34,7 +34,7 @@ export function Setup() {
   const channels = (form.channels ?? []) as Channel[];
   if (!project.data) return null;
   return (
-    <div className="mx-auto max-w-4xl px-8 py-10">
+    <div className="mx-auto max-w-5xl px-6 py-6">
       <PageHeader title="Set up the project" sub="Capture the context you carry in your head when you judge a trace. You can edit all of this later." />
       <form
         className="space-y-6"
@@ -71,11 +71,11 @@ export function Setup() {
               {Object.keys(CHANNEL_PRESETS)
                 .filter((k) => !channels.some((c) => c.name === k))
                 .map((k) => (
-                  <button type="button" key={k} className="chip hover:border-gold-400" onClick={() => set("channels", [...channels, { name: k, render_rule: CHANNEL_PRESETS[k] }])}>
+                  <button type="button" key={k} className="chip hover:border-accent-400" onClick={() => set("channels", [...channels, { name: k, render_rule: CHANNEL_PRESETS[k] }])}>
                     + {k}
                   </button>
                 ))}
-              <button type="button" className="chip hover:border-gold-400" onClick={() => set("channels", [...channels, { name: "other", render_rule: "" }])}>
+              <button type="button" className="chip hover:border-accent-400" onClick={() => set("channels", [...channels, { name: "other", render_rule: "" }])}>
                 + other
               </button>
             </div>

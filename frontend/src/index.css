@@ -2,8 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light theme (default) — neutral zinc, blue accent, in the style of modern eval/observability tools. */
 :root {
+  color-scheme: light;
+  --ink-950: 255 255 255;
+  --ink-900: 250 250 250;
+  --ink-850: 244 244 245;
+  --ink-800: 236 236 239;
+  --ink-700: 228 228 231;
+  --ink-600: 212 212 216;
+  --ink-500: 161 161 170;
+  --mist-50: 9 9 11;
+  --mist-100: 24 24 27;
+  --mist-200: 39 39 42;
+  --mist-300: 63 63 70;
+  --mist-400: 113 113 122;
+  --mist-500: 161 161 170;
+  --accent-300: 29 78 216;
+  --accent-400: 37 99 235;
+  --accent-500: 29 78 216;
+  --accent-600: 30 64 175;
+  --pass-400: 21 128 61;
+  --pass-500: 22 163 74;
+  --pass-900: 220 252 231;
+  --fail-400: 185 28 28;
+  --fail-500: 220 38 38;
+  --fail-900: 254 226 226;
+  --warn-400: 161 98 7;
+  --warn-900: 254 243 199;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 1px 3px rgb(0 0 0 / 0.06);
+}
+
+:root[data-theme="dark"] {
   color-scheme: dark;
+  --ink-950: 9 9 11;
+  --ink-900: 17 17 19;
+  --ink-850: 24 24 27;
+  --ink-800: 32 32 36;
+  --ink-700: 39 39 42;
+  --ink-600: 63 63 70;
+  --ink-500: 82 82 91;
+  --mist-50: 250 250 250;
+  --mist-100: 244 244 245;
+  --mist-200: 228 228 231;
+  --mist-300: 212 212 216;
+  --mist-400: 161 161 170;
+  --mist-500: 113 113 122;
+  --accent-300: 147 197 253;
+  --accent-400: 96 165 250;
+  --accent-500: 59 130 246;
+  --accent-600: 37 99 235;
+  --pass-400: 74 222 128;
+  --pass-500: 34 197 94;
+  --pass-900: 5 46 22;
+  --fail-400: 248 113 113;
+  --fail-500: 239 68 68;
+  --fail-900: 69 10 10;
+  --warn-400: 251 191 36;
+  --warn-900: 66 32 6;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 }
 
 html,
@@ -13,54 +70,82 @@ body,
 }
 
 body {
+  font-size: 13px;
+  line-height: 1.5;
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
+  @apply bg-ink-950 text-mist-100;
 }
 
 @layer components {
   .card {
-    @apply rounded-xl border border-ink-700 bg-ink-900/80;
+    @apply rounded-lg border border-ink-700 bg-ink-950;
+    box-shadow: var(--shadow);
+  }
+  .panel {
+    @apply rounded-lg border border-ink-700 bg-ink-900;
   }
   .btn {
-    @apply inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition
-      disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/70;
+    @apply inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-[13px] font-medium transition
+      disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400/50;
+  }
+  .btn-sm {
+    @apply h-7 px-2 text-xs;
   }
   .btn-primary {
-    @apply btn bg-gold-400 text-ink-950 hover:bg-gold-300;
+    @apply btn bg-accent-400 text-white hover:bg-accent-500;
   }
   .btn-ghost {
-    @apply btn border border-ink-600 text-mist-200 hover:border-mist-400 hover:text-mist-50;
+    @apply btn border border-ink-600 bg-ink-950 text-mist-200 hover:bg-ink-850 hover:text-mist-50;
   }
   .btn-quiet {
-    @apply btn text-mist-300 hover:text-mist-50 hover:bg-ink-800;
+    @apply btn text-mist-300 hover:bg-ink-850 hover:text-mist-50;
   }
   .input {
-    @apply w-full rounded-lg border border-ink-600 bg-ink-950 px-3 py-2 text-sm text-mist-50 placeholder:text-mist-500
-      focus:border-gold-400/70 focus:outline-none focus:ring-1 focus:ring-gold-400/40;
+    @apply w-full rounded-md border border-ink-600 bg-ink-950 px-2.5 py-1.5 text-[13px] text-mist-50 placeholder:text-mist-500
+      focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-400/20;
   }
   .label {
-    @apply mb-1 block text-xs font-semibold uppercase tracking-wider text-mist-400;
+    @apply mb-1 block text-xxs font-medium uppercase tracking-wide text-mist-400;
   }
   .kbd {
-    @apply inline-flex min-w-[1.4rem] items-center justify-center rounded border border-ink-500 bg-ink-800 px-1 font-mono text-[11px] text-mist-200;
+    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-ink-600 bg-ink-900 px-1 font-mono text-[10.5px] text-mist-300;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full border border-ink-600 px-2 py-0.5 text-xs text-mist-300;
+    @apply inline-flex h-[22px] items-center gap-1 rounded-md border border-ink-700 bg-ink-900 px-1.5 text-xs text-mist-300;
   }
   .h1 {
-    @apply text-2xl font-semibold tracking-tight text-mist-50;
+    @apply text-xl font-semibold tracking-tight text-mist-50;
   }
   .h2 {
-    @apply text-lg font-semibold text-mist-50;
+    @apply text-[15px] font-semibold text-mist-50;
   }
   .muted {
     @apply text-mist-400;
+  }
+  .tbl {
+    @apply w-full border-collapse text-left text-[13px];
+  }
+  .tbl th {
+    @apply sticky top-0 z-[1] border-b border-ink-700 bg-ink-900 px-3 py-2 text-xxs font-medium uppercase tracking-wide text-mist-400;
+  }
+  .tbl td {
+    @apply border-b border-ink-700 px-3 py-2 align-top;
+  }
+  .tbl tbody tr:hover {
+    @apply bg-ink-900;
+  }
+  .tab {
+    @apply -mb-px inline-flex h-9 items-center gap-1.5 border-b-2 border-transparent px-1 text-[13px] text-mist-400 hover:text-mist-100;
+  }
+  .tab-active {
+    @apply border-accent-400 text-mist-50;
   }
 }
 
 .term {
   position: relative;
-  border-bottom: 1px dotted theme("colors.mist.400");
+  border-bottom: 1px dotted rgb(var(--mist-400));
   cursor: help;
 }
 .term:hover::after,
@@ -71,19 +156,18 @@ body {
   top: calc(100% + 6px);
   z-index: 60;
   width: max-content;
-  max-width: 320px;
+  max-width: 300px;
   white-space: normal;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: theme("colors.ink.700");
-  border: 1px solid theme("colors.ink.500");
-  color: theme("colors.mist.100");
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: rgb(24 24 27);
+  color: rgb(244 244 245);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.45;
   text-transform: none;
   letter-spacing: normal;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
 }
 
 ::-webkit-scrollbar {
@@ -91,9 +175,9 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: theme("colors.ink.600");
+  background: rgb(var(--ink-600));
   border-radius: 8px;
-  border: 2px solid theme("colors.ink.950");
+  border: 3px solid rgb(var(--ink-950));
 }
 ::-webkit-scrollbar-track {
   background: transparent;

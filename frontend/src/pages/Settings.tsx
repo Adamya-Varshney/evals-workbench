@@ -22,7 +22,7 @@ export function Settings() {
     },
   });
   return (
-    <div className="mx-auto max-w-5xl px-8 py-10">
+    <div className="mx-auto max-w-5xl px-6 py-6">
       <PageHeader title="Settings" sub="Project preferences and every prompt template the app sends to the model." />
       <div className="card grid grid-cols-2 gap-5 p-5">
         <label className="flex items-center gap-3 text-sm">
@@ -83,7 +83,7 @@ function Templates() {
             >
               <span className="font-medium text-mist-100">{t.title}</span>
               <span className="font-mono text-xs text-mist-500">{t.key}</span>
-              {t.body !== t.default_body && <span className="chip border-gold-500/40 text-gold-300">edited</span>}
+              {t.body !== t.default_body && <span className="chip border-accent-500/40 text-accent-300">edited</span>}
               <span className="ml-auto text-mist-500">{open === t.key ? "▾" : "▸"}</span>
             </button>
             {open === t.key && (
