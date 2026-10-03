@@ -55,7 +55,7 @@ _GROUPS = [
      "Scheduling problems", "Tour changes create extra bookings or otherwise go wrong."),
     ("date", r"\bdate\b|wrong day|today|weekday|calendar|\bday\b|in the past",
      "Temporal issues", "Problems with dates and days."),
-    ("handoff", r"human|person|agent|representative|hand ?off|transfer|escalat|real person|speak to",
+    ("handoff", r"\bhuman\b|\bperson\b|\bagent\b|representative|hand ?off|transfer|escalat|speak to",
      "Ignores requests for a human", "The user explicitly asks for a person and is not handed off."),
     ("deadend", r"dead[ -]?end|robotic|no alternative|alternatives|nurtur|lead|gave up|unhelpful|generic|anything else",
      "Unhelpful dead-end replies", "When nothing matches, the assistant ends the conversation instead of offering alternatives."),

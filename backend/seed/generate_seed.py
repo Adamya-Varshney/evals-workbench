@@ -20,6 +20,26 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "larkspur_traces.jsonl"
 TRUTH = HERE.parent / "tests" / "fixtures" / "planted_truth.json"
+SHOWCASE = HERE / "showcase_notes.json"  # reviewer-style notes for the public demo's pre-filled walkthrough only
+
+SHOWCASE_NOTES = {
+    "markdown_sms": ["Sent **bold** and bullet points over SMS. On a phone this shows raw asterisks and dashes.",
+                     "Markdown in a text message: asterisks, bullets, a [link](url). Looks broken."],
+    "promise_no_followup": ["Says it will check and get back to them, then the conversation just ends. Nobody follows up.",
+                            "Promised to look into it and follow up; never did."],
+    "ignores_constraint": ["User said their budget / pet / floor requirement and the bot listed a unit that breaks it.",
+                           "Ignored the constraint the user stated and showed units that don't fit."],
+    "virtual_vs_inperson": ["Booked an in-person tour but told the person it's a virtual tour with a video link.",
+                            "Says virtual tour, tool call says in_person. We don't even offer virtual tours."],
+    "duplicate_booking": ["User asked to move their tour; the bot booked a second tour instead of rescheduling the first. Now two bookings.",
+                          "Created a new booking instead of rescheduling. The old one is still on the calendar."],
+    "wrong_date": ["Wrong date: says 'tomorrow' but the date it gives doesn't match today's date.",
+                   "Got today's date wrong, so the booking/move-in date is off."],
+    "no_handoff": ["User explicitly asked for a real person and the bot kept answering itself. No handoff.",
+                   "Asked for a human twice; the bot ignored it."],
+    "robotic_dead_end": ["Robotic dead end: 'no units match, anything else?' No alternatives, no waitlist, lead lost.",
+                         "Nothing fits so it just gives up. Should offer the sister property or notify list."],
+}
 
 SYSTEM_V13 = """You are Lark, the virtual leasing assistant for Larkspur Residences, a group of three apartment communities in the Austin area:
 - Larkspur Commons (South Austin, 78704)
@@ -760,6 +780,11 @@ def main() -> None:
     lines.insert(64, json.dumps({"id": "lk-0917-empty", "timestamp": "2026-09-17T13:40:00-05:00", "channel": "SMS", "messages": []}))
     lines.insert(90, lines[12])
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    notes = {}
+    for i, (tid, t) in enumerate(truth.items()):
+        if t["failures"]:
+            notes[tid] = " Also: ".join(SHOWCASE_NOTES[f][(i + j) % 2] for j, f in enumerate(t["failures"]))
+    SHOWCASE.write_text(json.dumps(notes, indent=1), encoding="utf-8")
     TRUTH.parent.mkdir(parents=True, exist_ok=True)
     TRUTH.write_text(json.dumps(truth, indent=1), encoding="utf-8")
     n_fail = sum(1 for t in truth.values() if t["failures"])

@@ -1,0 +1,13 @@
+# Render blueprint for the public portfolio demo (free plan, simulated AI, resets daily).
+# Render → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: evals-workbench-demo
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: DEMO_MODE
+        value: "1"
+      - key: DEMO_RESET_HOURS
+        value: "24"

@@ -106,6 +106,10 @@ Judges that have not passed final validation are exported with a **DRAFT** banne
 
 ---
 
+## Hosting
+
+See **[DEPLOY.md](DEPLOY.md)**. It covers a public portfolio demo (`DEMO_MODE=1`: simulated AI, a pre-filled walkthrough, daily reset) on Render or Railway, and private use (your PC + Tailscale, or a password-protected hosted copy with a persistent volume). A `Dockerfile` and `render.yaml` are included.
+
 ## Development
 
 ```bash

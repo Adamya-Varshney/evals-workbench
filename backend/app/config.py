@@ -18,6 +18,8 @@ def _env(name: str, default: str) -> str:
 class Settings:
     @property
     def anthropic_api_key(self) -> str:
+        if self.demo_mode:
+            return ""
         return _env("ANTHROPIC_API_KEY", "")
 
     @property
@@ -25,8 +27,28 @@ class Settings:
         return _env("EVALS_MODEL", "claude-sonnet-5-5")
 
     @property
+    def demo_mode(self) -> bool:
+        """Public portfolio demo: AI is always simulated, data resets on a schedule."""
+        return _env("DEMO_MODE", "0").lower() in ("1", "true", "yes")
+
+    @property
+    def demo_reset_hours(self) -> float:
+        return float(_env("DEMO_RESET_HOURS", "24"))
+
+    @property
+    def app_password(self) -> str:
+        """If set, the whole app (UI + API) asks for this password (HTTP basic auth, any username)."""
+        return _env("APP_PASSWORD", "")
+
+    @property
+    def max_upload_mb(self) -> float:
+        return float(_env("MAX_UPLOAD_MB", "5" if self.demo_mode else "200"))
+
+    @property
     def llm_mode(self) -> str:
         # "mock" returns deterministic canned responses; "live" calls the API.
+        if self.demo_mode:
+            return "mock"  # never spend a real key on anonymous visitors
         mode = _env("LLM_MODE", "")
         if mode:
             return mode.lower()

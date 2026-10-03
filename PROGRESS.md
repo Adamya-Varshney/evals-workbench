@@ -115,3 +115,11 @@
 **Final state:** 50 backend tests pass, the frontend typechecks and builds, and the Playwright keyboard-only review test passes.
 
 **Definition-of-done coverage (mock mode):** steps 1–9 are exercised end to end by `test_runs_export.py` plus `test_evaluators.py`, ending with extracting the bundle and running `run_evals.py` successfully. Live-key runs have not been executed in this environment because there is no `ANTHROPIC_API_KEY`.
+
+## Hosting (after phase 7) ✅
+- `Dockerfile` (single container: built UI served by FastAPI on `$PORT`, data under `/data`), `.dockerignore`, `render.yaml` (free demo), `/healthz`.
+- `DEMO_MODE=1`: forces simulated AI and ignores any API key. Shows a banner with "Reset now" (rate-limited). On startup and every `DEMO_RESET_HOURS` it rebuilds a blank Larkspur project plus a **pre-filled walkthrough** in which every stage is complete: 100 reviews, an 8-mode taxonomy, an active markdown check, a validated handoff judge, two suite runs and a logged experiment. The walkthrough is built by driving the real API in-process.
+- `APP_PASSWORD` gates the whole app for private hosted copies. Uploads are capped (`MAX_UPLOAD_MB`; 5 MB in demo mode).
+- Fixed a mock keyword bug ("person" matching inside `in_person`) that mislabelled the walkthrough.
+- Tests: 54 backend tests pass (including the password gate, demo-mode key isolation, the upload cap and a full walkthrough rebuild).
+- The production build + demo mode was verified by serving the built UI from FastAPI. The Docker image itself was **not** built here because Docker Desktop's engine wasn't running.

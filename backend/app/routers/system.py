@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api", tags=["system"])
 @router.get("/meta")
 def meta():
     return {"llm_mode": settings.llm_mode, "model": settings.model, "has_key": bool(settings.anthropic_api_key),
-            "concurrency": settings.llm_concurrency}
+            "concurrency": settings.llm_concurrency, "demo_mode": settings.demo_mode, "demo_reset_hours": settings.demo_reset_hours}
 
 
 @router.get("/llm_calls")

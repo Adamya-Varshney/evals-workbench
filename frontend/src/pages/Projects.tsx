@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, type Project } from "../api";
 import { Logo } from "../components/Layout";
-import { useTheme } from "../components/ui";
+import { DemoBanner, useTheme } from "../components/ui";
 
 export function Projects() {
   const nav = useNavigate();
@@ -24,6 +24,7 @@ export function Projects() {
   });
   return (
     <div className="min-h-full bg-ink-950">
+      <DemoBanner />
       <header className="flex h-11 items-center gap-2 border-b border-ink-700 px-4">
         <Logo />
         <span className="text-[13px] font-semibold text-mist-50">Evals Workbench</span>

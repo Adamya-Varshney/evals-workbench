@@ -102,4 +102,4 @@ export type BatchSummary = {
   created_at: string;
 };
 
-export type Meta = { llm_mode: string; model: string; has_key: boolean; concurrency: number };
+export type Meta = { llm_mode: string; model: string; has_key: boolean; concurrency: number; demo_mode?: boolean; demo_reset_hours?: number };

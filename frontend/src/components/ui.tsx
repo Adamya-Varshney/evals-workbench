@@ -145,3 +145,28 @@ export function pct(x: number | null | undefined, digits = 0) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   return `${(x * 100).toFixed(digits)}%`;
 }
+
+/** Shown on hosted public demos: AI is simulated and data resets on a schedule. */
+export function DemoBanner() {
+  const meta = useMeta();
+  const [msg, setMsg] = useState("");
+  if (!meta.data?.demo_mode) return null;
+  const reset = async () => {
+    if (!confirm("Reset the demo to its starting state? Everyone's changes are cleared.")) return;
+    try {
+      await api.post("/api/demo/reset");
+      setMsg("Resetting… reload in about 30 seconds.");
+    } catch (e: any) {
+      setMsg(e.message);
+    }
+  };
+  return (
+    <div className="flex h-8 shrink-0 items-center justify-center gap-3 border-b border-warn-400/30 bg-warn-900/60 px-3 text-xs text-warn-400">
+      <span>
+        <b>Public demo.</b> AI responses are simulated (no real model calls), and data resets every {meta.data.demo_reset_hours ?? 24}h. Start with the pre-filled walkthrough, or try the blank Larkspur project yourself.
+      </span>
+      <button className="underline hover:text-mist-50" onClick={reset}>Reset now</button>
+      {msg && <span className="text-mist-300">{msg}</span>}
+    </div>
+  );
+}

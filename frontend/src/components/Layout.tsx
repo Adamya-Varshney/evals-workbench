@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../api";
-import { StatusIcon, Term, useMeta, usePid, useProject, useStatus, useTheme } from "./ui";
+import { DemoBanner, StatusIcon, Term, useMeta, usePid, useProject, useStatus, useTheme } from "./ui";
 
 export const STAGE_ROUTES: Record<string, string> = {
   setup: "setup",
@@ -41,6 +41,7 @@ export function Layout() {
 
   return (
     <div className="flex h-full flex-col">
+      <DemoBanner />
       <header className="flex h-11 shrink-0 items-center gap-2.5 border-b border-ink-700 bg-ink-950 px-3">
         <Link to="/" className="flex items-center gap-2 text-[13px] font-semibold text-mist-50" title="All projects">
           <Logo /> <span className="hidden sm:inline">Evals Workbench</span>
